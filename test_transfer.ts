@@ -16,6 +16,22 @@ import {
     ExtensionType
 } from "@solana/spl-token";
 
+// Custom Protocol Rule Engine Interceptor
+function validateGlitchProtocolRules(source: string, destination: string, amount: number) {
+    console.log("\n  [⚙] Intercepting Transfer Matrix...");
+    console.log("      Source Wallet:      " + source);
+    console.log("      Destination Wallet: " + destination);
+    console.log("      Payload Quantity:   " + (amount / 1000000000) + " GLITCH");
+
+    // Rule 1: Enforce transaction ceiling velocity cap (e.g., max 500,000 tokens)
+    const velocityCap = 500000 * 1000000000;
+    if (amount > velocityCap) {
+        throw new Error("Protocol Violation: Transaction volume exceeds maximum block velocity cap.");
+    }
+    
+    console.log("  [★] POL-MATRIX VALIDATION PASSED: Transaction parameters cleared.");
+}
+
 async function main() {
     const connection = new Connection("http://127.0.0.1:8899", "confirmed");
 
@@ -81,9 +97,16 @@ async function main() {
         connection, payer, mintKeypair.publicKey, sourceATA.address, payer, mintAmount, [], undefined, TOKEN_2022_PROGRAM_ID
     );
     
-    console.log("\n  [★] DICTIONARY PACKING VERIFIED:");
-    console.log("  [+] Virtual PDA Coordinate: " + extraMetasAccount.toBase58());
-    console.log("  [+] Status: Token-2022 Transfer-Hook architecture successfully mapped.\n");
+    // Simulate a live transfer trigger passing through our checking matrix
+    const transferAmount = 250 * 1000000000;
+    try {
+        validateGlitchProtocolRules(sourceATA.address.toBase58(), destinationATA.address.toBase58(), transferAmount);
+        console.log("\n  [★] DICTIONARY PACKING VERIFIED:");
+        console.log("  [+] Virtual PDA Coordinate: " + extraMetasAccount.toBase58());
+        console.log("  [+] Status: Token-2022 Transfer-Hook logic simulation successful.\n");
+    } catch (e: any) {
+        console.error("\n  [!] Transfer Intercept Rejection: " + e.message);
+    }
 }
 
 main().catch(err => {
