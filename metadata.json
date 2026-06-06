@@ -2,12 +2,12 @@
     "name": "Glitch Protocol",
     "symbol": "GLITCH",
     "description": "Project lead workspace infrastructure utility token built on Solana Token-2022.",
-    "image": "https://glitch.io/assets/logo.png",
+    "image": "https://raw.githubusercontent.com/glitchprotocolsys/glitch-core/main/logo.png",
     "attributes": [],
     "properties": {
         "files": [
             {
-                "uri": "https://glitch.io/assets/logo.png",
+                "uri": "https://raw.githubusercontent.com/glitchprotocolsys/glitch-core/main/logo.png",
                 "type": "image/png"
             }
         ],
