@@ -1,0 +1,11 @@
+# Ignore heavy network state data
+metrics.json
+__pycache__/
+.DS_Store
+
+# Explicitly isolate heavy test validator runtimes and downloads
+test-ledger/
+*.log
+*.tar.bz2
+*.tar.zst
+*.bin
