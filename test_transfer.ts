@@ -62,6 +62,15 @@ async function main() {
     );
     await sendAndConfirmTransaction(connection, createMintTx, [payer, mintKeypair]);
 
+    // Programmatically derive the required on-chain validation lookup address
+    const [extraMetasAccount] = PublicKey.findProgramAddressSync(
+        [Buffer.from("extra-account-metas"), mintKeypair.publicKey.toBuffer()],
+        hookProgramId
+    );
+
+    console.log("  [+] Derived Validation Dictionary Coordinate:");
+    console.log("      " + extraMetasAccount.toBase58());
+
     console.log("  [+] Allocating Associated Token Accounts...");
     const sourceATA = await getOrCreateAssociatedTokenAccount(
         connection, payer, mintKeypair.publicKey, sourceAuthority.publicKey, false, "confirmed", undefined, TOKEN_2022_PROGRAM_ID
@@ -76,10 +85,8 @@ async function main() {
         connection, payer, mintKeypair.publicKey, sourceATA.address, payer, mintAmount, [], undefined, TOKEN_2022_PROGRAM_ID
     );
     
-    console.log("\n  [★] SYSTEM ARCHITECTURE VERIFIED:");
-    console.log("  [+] Mint Account Address:   " + mintKeypair.publicKey.toBase58());
-    console.log("  [+] Registered Hook Target: " + hookProgramId.toBase58());
-    console.log("  [+] Ready to simulate transfer restrictions.\n");
+    console.log("\n  [★] DICTIONARY MAP READY FOR ALLOCATION:");
+    console.log("  [+] Meta Account State: Derived successfully.");
 }
 
 main().catch(err => {
